@@ -3,18 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const options_1 = require("./options");
 const chokidar = require("chokidar");
 const vue_i18n_hints_1 = require("vue-i18n-hints");
+const upath = require("upath");
 const NuxtI18nHintsModule = function (moduleOptions) {
     // get option
     const opt = options_1.mergeOption(this.options, moduleOptions);
-    const hintCompiler = new vue_i18n_hints_1.HintCompiler({
-        sourceDir: opt.hint.sourceDir,
-        outDir: opt.hint.outDir,
-        postfix: opt.hint.postfix
-    });
-    const miniTranspiler = new vue_i18n_hints_1.MiniTranspiler({
-        sourceDir: opt.messages.sourceDir,
-        outDir: opt.messages.outDir
-    });
+    const hintCompiler = new vue_i18n_hints_1.HintCompiler(opt.hint);
+    const miniTranspiler = new vue_i18n_hints_1.MiniTranspiler(opt.messages);
     // chokidar
     const chokidars = {};
     // set hook
@@ -28,8 +22,8 @@ const NuxtI18nHintsModule = function (moduleOptions) {
             chokidars.hint = chokidar
                 .watch(opt.hint.source)
                 .on('change', (path) => {
-                console.log('change ' + path);
-                hintCompiler.compile([path]);
+                console.log('Compile ' + upath.toUnix(path));
+                hintCompiler.compile([upath.toUnix(path)]);
             });
         }
         // watch ts -> js files
@@ -37,8 +31,8 @@ const NuxtI18nHintsModule = function (moduleOptions) {
             chokidars.js = chokidar
                 .watch(opt.messages.sources)
                 .on('change', (path) => {
-                console.log('change ' + path);
-                miniTranspiler.compile([path]);
+                console.log('Compile ' + upath.toUnix(path));
+                miniTranspiler.compile([upath.toUnix(path)]);
             });
         }
     });

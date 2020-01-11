@@ -87,7 +87,7 @@ nuxtOption, moduleOptions) {
         messages: {
             sources,
             sourceDir: jsSourceDir,
-            outDir: hOpts.messages.outDir || i18nSrcDir || DEF_OPT.messages.outDir
+            outDir: hOpts.messages.outDir || i18n.langDir || DEF_OPT.messages.outDir
         }
     };
 }
