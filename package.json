@@ -12,6 +12,7 @@
   "dependencies": {
     "chokidar": "^3.3.1",
     "glob": "^7.1.6",
+    "upath": "^1.2.0",
     "vue-i18n-hints": "noonworks/vue-i18n-hints"
   },
   "devDependencies": {

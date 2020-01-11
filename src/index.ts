@@ -3,6 +3,7 @@ import { Options, mergeOption, NuxtModuleThis } from './options';
 import * as webpack from 'webpack';
 import * as chokidar from 'chokidar';
 import { HintCompiler, MiniTranspiler } from 'vue-i18n-hints';
+import * as upath from 'upath';
 
 interface ChokidarDict {
   hint?: chokidar.FSWatcher;
@@ -30,8 +31,8 @@ const NuxtI18nHintsModule: Module<Options> = function(
         chokidars.hint = chokidar
           .watch(opt.hint.source)
           .on('change', (path: string) => {
-            console.log('change ' + path);
-            hintCompiler.compile([path]);
+            console.log('Compile ' + upath.toUnix(path));
+            hintCompiler.compile([upath.toUnix(path)]);
           });
       }
       // watch ts -> js files
@@ -39,8 +40,8 @@ const NuxtI18nHintsModule: Module<Options> = function(
         chokidars.js = chokidar
           .watch(opt.messages.sources)
           .on('change', (path: string) => {
-            console.log('change ' + path);
-            miniTranspiler.compile([path]);
+            console.log('Compile ' + upath.toUnix(path));
+            miniTranspiler.compile([upath.toUnix(path)]);
           });
       }
     }
