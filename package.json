@@ -1,0 +1,8 @@
+{
+  "name": "nuxt-i18n-hints",
+  "version": "0.1.0",
+  "main": "index.js",
+  "author": "@noonworks",
+  "license": "MIT",
+  "private": true
+}
