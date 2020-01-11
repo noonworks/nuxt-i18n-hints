@@ -9,7 +9,12 @@
     "build": "tsc",
     "lint": "eslint --ext .ts ./src"
   },
+  "dependencies": {
+    "glob": "^7.1.6",
+    "vue-i18n-hints": "noonworks/vue-i18n-hints"
+  },
   "devDependencies": {
+    "@nuxt/types": "^0.6.0",
     "@typescript-eslint/eslint-plugin": "^2.15.0",
     "@typescript-eslint/parser": "^2.15.0",
     "eslint": "^6.8.0",
