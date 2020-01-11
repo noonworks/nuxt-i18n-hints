@@ -15,15 +15,8 @@ const NuxtI18nHintsModule: Module<Options> = function(
 ): void {
   // get option
   const opt = mergeOption(this.options, moduleOptions);
-  const hintCompiler = new HintCompiler({
-    sourceDir: opt.hint.sourceDir,
-    outDir: opt.hint.outDir,
-    postfix: opt.hint.postfix
-  });
-  const miniTranspiler = new MiniTranspiler({
-    sourceDir: opt.messages.sourceDir,
-    outDir: opt.messages.outDir
-  });
+  const hintCompiler = new HintCompiler(opt.hint);
+  const miniTranspiler = new MiniTranspiler(opt.messages);
   // chokidar
   const chokidars: ChokidarDict = {};
   // set hook
