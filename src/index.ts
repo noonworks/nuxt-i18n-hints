@@ -15,6 +15,10 @@ interface ChokidarDict {
   js?: chokidar.FSWatcher;
 }
 
+function log(msg: string): void {
+  console.log('[NuxtI18nHints] ' + msg);
+}
+
 const NuxtI18nHintsModule: Module<Options> = function(
   this: NuxtModuleThis,
   moduleOptions?: Partial<Options>
@@ -27,14 +31,14 @@ const NuxtI18nHintsModule: Module<Options> = function(
   const hintCompiler = new HintCompiler(opt.hint);
   const compile = (path: string): void => {
     const result = hintCompiler.compile([upath.toUnix(path)]);
-    result.succeed.forEach(p => console.log('Build ' + p.destination + '.'));
-    result.failed.forEach(p => console.log('FAILED to build ' + p.destination));
+    result.succeed.forEach(p => log('Build ' + p.destination + '.'));
+    result.failed.forEach(p => log('FAILED to build ' + p.destination));
   };
   const miniTranspiler = new MiniTranspiler(opt.messages);
   const transpile = (path: string): void => {
     const result = miniTranspiler.compile([upath.toUnix(path)]);
-    if (result) console.log('Build .js files.');
-    else console.log('Some error occurred while build .js files.');
+    if (result) log('Build .js files.');
+    else log('Some error occurred while build .js files.');
   };
   // chokidar
   const chokidars: ChokidarDict = {};
