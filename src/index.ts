@@ -1,10 +1,14 @@
-import { Module } from '@nuxt/types';
-import { Options, mergeOption, NuxtModuleThis } from './options';
-import * as webpack from 'webpack';
+import { Module, Configuration as NuxtConfiguration } from '@nuxt/types';
 import * as chokidar from 'chokidar';
-import { HintCompiler, MiniTranspiler, PathManager } from 'vue-i18n-hints';
 import * as upath from 'upath';
-import { posix } from 'path';
+import { HintCompiler, MiniTranspiler } from 'vue-i18n-hints';
+import { Options, mergeOption, createTemplate } from './options';
+
+interface NuxtModuleThis {
+  options: NuxtConfiguration;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+}
 
 interface ChokidarDict {
   hint?: chokidar.FSWatcher;
@@ -18,18 +22,7 @@ const NuxtI18nHintsModule: Module<Options> = function(
   // get option
   const opt = mergeOption(this.options, moduleOptions);
   // insert plugin
-  const pmgr = new PathManager({
-    ...opt.hint,
-    hintsDir: opt.hint.outDir
-  });
-  const importPath = pmgr.dest(opt.hint.source);
-  this.addPlugin({
-    src: posix.resolve(__dirname, '../dist', 'plugin.ts'),
-    options: {
-      file: importPath,
-      hintobj: opt.plugin.hintObject
-    }
-  });
+  this.addPlugin(createTemplate(opt));
   // create compilers
   const hintCompiler = new HintCompiler(opt.hint);
   const compile = (path: string): void => {
@@ -46,27 +39,23 @@ const NuxtI18nHintsModule: Module<Options> = function(
   // chokidar
   const chokidars: ChokidarDict = {};
   // set hook
-  this.nuxt.hook(
-    'build:compile',
-    (params: { name: 'client' | 'server'; compiler: webpack.Compiler }) => {
-      if (params.name === 'server') return;
-      if (!params.compiler) return;
-      // watch hints file
-      if (opt.hint.source.length > 0) {
-        chokidars.hint = chokidar
-          .watch(opt.hint.source)
-          .on('change', compile)
-          .on('add', compile);
-      }
-      // watch ts -> js files
-      if (opt.messages.sources.length > 0) {
-        chokidars.js = chokidar
-          .watch(opt.messages.sources)
-          .on('change', transpile)
-          .on('add', transpile);
-      }
+  this.nuxt.hook('build:compile', (params: { name: 'client' | 'server' }) => {
+    if (params.name === 'server') return;
+    // watch hints file
+    if (opt.hint.source.length > 0) {
+      chokidars.hint = chokidar
+        .watch(opt.hint.source)
+        .on('change', compile)
+        .on('add', compile);
     }
-  );
+    // watch ts -> js files
+    if (opt.messages.sources.length > 0) {
+      chokidars.js = chokidar
+        .watch(opt.messages.sources)
+        .on('change', transpile)
+        .on('add', transpile);
+    }
+  });
 };
 
 export default NuxtI18nHintsModule;

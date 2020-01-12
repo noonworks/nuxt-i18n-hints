@@ -1,6 +1,6 @@
-import { Configuration as NuxtConfiguration } from '@nuxt/types';
-import { posix } from 'path';
 import * as gb from 'glob';
+import { posix, resolve } from 'path';
+import { PathManager } from 'vue-i18n-hints';
 
 export interface Options {
   hint: {
@@ -34,10 +34,35 @@ type ChildPartial<T> = {
     : T[P];
 };
 
-export interface NuxtModuleThis {
-  options: NuxtConfiguration;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
+interface PluginTemplate {
+  src: string;
+  options: {
+    file: string;
+    hintobj: string;
+  };
+}
+
+function getImportPath(opt: Options): string {
+  const pmgr = new PathManager({
+    ...opt.hint,
+    hintsDir: opt.hint.outDir
+  });
+  const dest = pmgr.dest(opt.hint.source);
+  const ext = posix.extname(dest);
+  const base = posix.basename(dest, ext);
+  return posix.join(posix.dirname(dest), base);
+}
+
+export function createTemplate(opt: Options): PluginTemplate {
+  const importPath = getImportPath(opt);
+  const templatePath = resolve(__dirname, 'plugin.ts');
+  return {
+    src: templatePath,
+    options: {
+      file: importPath,
+      hintobj: opt.plugin.hintObject
+    }
+  };
 }
 
 interface I18nLocale {

@@ -1,7 +1,30 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const path_1 = require("path");
 const gb = require("glob");
+const path_1 = require("path");
+const vue_i18n_hints_1 = require("vue-i18n-hints");
+function getImportPath(opt) {
+    const pmgr = new vue_i18n_hints_1.PathManager({
+        ...opt.hint,
+        hintsDir: opt.hint.outDir
+    });
+    const dest = pmgr.dest(opt.hint.source);
+    const ext = path_1.posix.extname(dest);
+    const base = path_1.posix.basename(dest, ext);
+    return path_1.posix.join(path_1.posix.dirname(dest), base);
+}
+function createTemplate(opt) {
+    const importPath = getImportPath(opt);
+    const templatePath = path_1.resolve(__dirname, 'plugin.ts');
+    return {
+        src: templatePath,
+        options: {
+            file: importPath,
+            hintobj: opt.plugin.hintObject
+        }
+    };
+}
+exports.createTemplate = createTemplate;
 const DEF_OPT = {
     hint: {
         postfix: 'Hints',
