@@ -7,8 +7,21 @@ const upath = require("upath");
 const NuxtI18nHintsModule = function (moduleOptions) {
     // get option
     const opt = options_1.mergeOption(this.options, moduleOptions);
+    // create compilers
     const hintCompiler = new vue_i18n_hints_1.HintCompiler(opt.hint);
+    const compile = (path) => {
+        const result = hintCompiler.compile([upath.toUnix(path)]);
+        result.succeed.forEach(p => console.log('Build ' + p.destination + '.'));
+        result.failed.forEach(p => console.log('FAILED to build ' + p.destination));
+    };
     const miniTranspiler = new vue_i18n_hints_1.MiniTranspiler(opt.messages);
+    const transpile = (path) => {
+        const result = miniTranspiler.compile([upath.toUnix(path)]);
+        if (result)
+            console.log('Build .js files.');
+        else
+            console.log('Some error occurred while build .js files.');
+    };
     // chokidar
     const chokidars = {};
     // set hook
@@ -21,19 +34,15 @@ const NuxtI18nHintsModule = function (moduleOptions) {
         if (opt.hint.source.length > 0) {
             chokidars.hint = chokidar
                 .watch(opt.hint.source)
-                .on('change', (path) => {
-                console.log('Compile ' + upath.toUnix(path));
-                hintCompiler.compile([upath.toUnix(path)]);
-            });
+                .on('change', compile)
+                .on('add', compile);
         }
         // watch ts -> js files
         if (opt.messages.sources.length > 0) {
             chokidars.js = chokidar
                 .watch(opt.messages.sources)
-                .on('change', (path) => {
-                console.log('Compile ' + upath.toUnix(path));
-                miniTranspiler.compile([upath.toUnix(path)]);
-            });
+                .on('change', transpile)
+                .on('add', transpile);
         }
     });
 };
