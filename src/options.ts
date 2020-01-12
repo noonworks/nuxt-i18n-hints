@@ -14,6 +14,9 @@ export interface Options {
     sourceDir: string;
     outDir: string;
   };
+  plugin: {
+    hintObject: string;
+  };
 }
 
 type RecursivePartial<T> = {
@@ -54,6 +57,9 @@ const DEF_OPT: Options = {
     sources: [],
     sourceDir: 'lang/src',
     outDir: 'lang/build'
+  },
+  plugin: {
+    hintObject: 'I18nHints'
   }
 };
 
@@ -69,6 +75,10 @@ function mergePartialOptions(
     messages: {
       ...(opt1 ? opt1 : { messages: {} }).messages,
       ...(opt2 ? opt2 : { messages: {} }).messages
+    },
+    plugin: {
+      ...(opt1 ? opt1 : { plugin: {} }).plugin,
+      ...(opt2 ? opt2 : { plugin: {} }).plugin
     }
   };
 }
@@ -143,6 +153,9 @@ export function mergeOption(
       sources,
       sourceDir: jsSourceDir,
       outDir: hOpts.messages.outDir || i18n.langDir || DEF_OPT.messages.outDir
+    },
+    plugin: {
+      hintObject: hOpts.plugin.hintObject || DEF_OPT.plugin.hintObject
     }
   };
 }

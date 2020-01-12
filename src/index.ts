@@ -4,6 +4,7 @@ import * as webpack from 'webpack';
 import * as chokidar from 'chokidar';
 import { HintCompiler, MiniTranspiler } from 'vue-i18n-hints';
 import * as upath from 'upath';
+import { posix } from 'path';
 
 interface ChokidarDict {
   hint?: chokidar.FSWatcher;
@@ -16,6 +17,14 @@ const NuxtI18nHintsModule: Module<Options> = function(
 ): void {
   // get option
   const opt = mergeOption(this.options, moduleOptions);
+  // insert plugin
+  this.addPlugin({
+    src: posix.resolve(__dirname, '../dist', 'plugin.ts'),
+    options: {
+      file: '',
+      hintobj: opt.plugin.hintObject
+    }
+  });
   // create compilers
   const hintCompiler = new HintCompiler(opt.hint);
   const compile = (path: string): void => {
