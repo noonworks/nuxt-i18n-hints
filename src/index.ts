@@ -37,14 +37,15 @@ const NuxtI18nHintsModule: Module<Options> = function(
   const miniTranspiler = new MiniTranspiler(opt.messages);
   const transpile = (path: string): void => {
     const result = miniTranspiler.compile([upath.toUnix(path)]);
-    if (result) log('Build .js files.');
-    else log('Some error occurred while build .js files.');
+    if (result) log(`Build .js file(s) from [${path}].`);
+    else log(`FAILED to build .js file(s) from [${path}].`);
   };
   // chokidar
   const chokidars: ChokidarDict = {};
   // set hook
   this.nuxt.hook('build:compile', (params: { name: 'client' | 'server' }) => {
     if (params.name === 'server') return;
+    log('Set watchers for i18n files.');
     // watch hints file
     if (opt.hint.source.length > 0) {
       chokidars.hint = chokidar
