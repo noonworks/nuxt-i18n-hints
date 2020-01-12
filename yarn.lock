@@ -2185,7 +2185,7 @@ v8-compile-cache@^2.0.3:
 
 vue-i18n-hints@noonworks/vue-i18n-hints:
   version "0.1.0"
-  resolved "https://codeload.github.com/noonworks/vue-i18n-hints/tar.gz/1bdd4f2d273b062d835db9e5f2c1bd6cf8e2fb1e"
+  resolved "https://codeload.github.com/noonworks/vue-i18n-hints/tar.gz/2cde9ea63ca4a04cd998792f818ae093d98fcc58"
 
 which-pm-runs@^1.0.0:
   version "1.0.0"
