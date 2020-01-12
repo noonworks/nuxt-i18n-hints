@@ -26,7 +26,7 @@ const NuxtI18nHintsModule: Module<Options> = function(
   // get option
   const opt = mergeOption(this.options, moduleOptions);
   // insert plugin
-  this.addPlugin(createTemplate(opt));
+  if (!opt.plugin.disable) this.addPlugin(createTemplate(opt));
   // create compilers
   const hintCompiler = new HintCompiler(opt.hint);
   const compile = (path: string): void => {

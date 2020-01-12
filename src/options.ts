@@ -15,6 +15,7 @@ export interface Options {
     outDir: string;
   };
   plugin: {
+    disable: boolean;
     hintObject: string;
   };
 }
@@ -84,6 +85,7 @@ const DEF_OPT: Options = {
     outDir: 'lang/build'
   },
   plugin: {
+    disable: false,
     hintObject: 'I18nHints'
   }
 };
@@ -180,6 +182,7 @@ export function mergeOption(
       outDir: hOpts.messages.outDir || i18n.langDir || DEF_OPT.messages.outDir
     },
     plugin: {
+      disable: hOpts.plugin.disable || DEF_OPT.plugin.disable,
       hintObject: hOpts.plugin.hintObject || DEF_OPT.plugin.hintObject
     }
   };
