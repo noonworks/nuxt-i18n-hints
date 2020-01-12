@@ -4,9 +4,23 @@ const options_1 = require("./options");
 const chokidar = require("chokidar");
 const vue_i18n_hints_1 = require("vue-i18n-hints");
 const upath = require("upath");
+const path_1 = require("path");
 const NuxtI18nHintsModule = function (moduleOptions) {
     // get option
     const opt = options_1.mergeOption(this.options, moduleOptions);
+    // insert plugin
+    const pmgr = new vue_i18n_hints_1.PathManager({
+        ...opt.hint,
+        hintsDir: opt.hint.outDir
+    });
+    const importPath = pmgr.dest(opt.hint.source);
+    this.addPlugin({
+        src: path_1.posix.resolve(__dirname, '../dist', 'plugin.ts'),
+        options: {
+            file: importPath,
+            hintobj: opt.plugin.hintObject
+        }
+    });
     // create compilers
     const hintCompiler = new vue_i18n_hints_1.HintCompiler(opt.hint);
     const compile = (path) => {

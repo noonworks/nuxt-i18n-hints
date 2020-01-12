@@ -13,6 +13,9 @@ const DEF_OPT = {
         sources: [],
         sourceDir: 'lang/src',
         outDir: 'lang/build'
+    },
+    plugin: {
+        hintObject: 'I18nHints'
     }
 };
 function mergePartialOptions(opt1, opt2) {
@@ -24,6 +27,10 @@ function mergePartialOptions(opt1, opt2) {
         messages: {
             ...(opt1 ? opt1 : { messages: {} }).messages,
             ...(opt2 ? opt2 : { messages: {} }).messages
+        },
+        plugin: {
+            ...(opt1 ? opt1 : { plugin: {} }).plugin,
+            ...(opt2 ? opt2 : { plugin: {} }).plugin
         }
     };
 }
@@ -88,6 +95,9 @@ nuxtOption, moduleOptions) {
             sources,
             sourceDir: jsSourceDir,
             outDir: hOpts.messages.outDir || i18n.langDir || DEF_OPT.messages.outDir
+        },
+        plugin: {
+            hintObject: hOpts.plugin.hintObject || DEF_OPT.plugin.hintObject
         }
     };
 }

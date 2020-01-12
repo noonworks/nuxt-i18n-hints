@@ -2,7 +2,7 @@ import { Module } from '@nuxt/types';
 import { Options, mergeOption, NuxtModuleThis } from './options';
 import * as webpack from 'webpack';
 import * as chokidar from 'chokidar';
-import { HintCompiler, MiniTranspiler } from 'vue-i18n-hints';
+import { HintCompiler, MiniTranspiler, PathManager } from 'vue-i18n-hints';
 import * as upath from 'upath';
 import { posix } from 'path';
 
@@ -18,10 +18,15 @@ const NuxtI18nHintsModule: Module<Options> = function(
   // get option
   const opt = mergeOption(this.options, moduleOptions);
   // insert plugin
+  const pmgr = new PathManager({
+    ...opt.hint,
+    hintsDir: opt.hint.outDir
+  });
+  const importPath = pmgr.dest(opt.hint.source);
   this.addPlugin({
     src: posix.resolve(__dirname, '../dist', 'plugin.ts'),
     options: {
-      file: '',
+      file: importPath,
       hintobj: opt.plugin.hintObject
     }
   });
