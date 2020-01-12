@@ -38,6 +38,7 @@ const DEF_OPT = {
         outDir: 'lang/build'
     },
     plugin: {
+        disable: false,
         hintObject: 'I18nHints'
     }
 };
@@ -120,6 +121,7 @@ nuxtOption, moduleOptions) {
             outDir: hOpts.messages.outDir || i18n.langDir || DEF_OPT.messages.outDir
         },
         plugin: {
+            disable: hOpts.plugin.disable || DEF_OPT.plugin.disable,
             hintObject: hOpts.plugin.hintObject || DEF_OPT.plugin.hintObject
         }
     };
